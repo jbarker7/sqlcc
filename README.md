@@ -36,3 +36,9 @@ Notice "SQLCC" as the Application Name.
 **Is this done?**
 
 Yes, for the most part, its a really rough proof of concept (aka alpha).  Definitely needs some love and unfortunately I'm not able to fully devote myself to this project.
+
+**Troubleshooting**
+
+- Open the App.config and modify the parameters.  The important ones are "dbp.connString" which is your connection string to your database which you are running your tests against, "dbp.applicationName" is your Application Name as described above under "How Does it Work?", "dbp.traceDir" is the directory which you would like to store your trace files (currently outputs *.trc files on the server)-- this is on the SQL server (must have read/write access to this directory), "out.outputDir" is the output directory for the HTML files that are generated.
+
+- Ensure that you have copied both "SQLCC.Impl.HtmlCodeHighlighter.dll" and "SQLCC.Impl.MsSqlProvider.dll" into the same directory as "SQLCC.exe".  The App.config is configured to use the providers located in these assemblies.
