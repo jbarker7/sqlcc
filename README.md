@@ -17,11 +17,11 @@ For now, Microsoft SQL Server is supported, but has the capability of being expa
 
 In its most simple form, modify the App.config with a few values (i.e. connection string, application name, etc.) and then execute the following:
 
-    sqlcc --app.mode=start --dbp.traceFileName=12345
+    sqlcc --app.mode=start
 
     C:\Code\ConsoleApplication1\ConsoleApplication1\bin\Debug\YourTestApp.exe
 
-    sqlcc --app.mode=stop --dbp.traceFileName=12345
+    sqlcc --app.mode=stop
 
 You can also literally call MSTest or any other test runner.  Running the above generates a set of HTML files or you can alternatively create your own OutputProvider and store the results in another file format or in the database for querying.
 
