@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace SQLCC.Core.Objects
@@ -51,5 +52,11 @@ namespace SQLCC.Core.Objects
 
       [IgnoreDataMember]
       public List<DbCodeSegment> TraceCodeSegments { get; set; }
+
+      [DataMember]
+      public DateTime? StartDate { get; set; }
+
+      [DataMember]
+      public DateTime? EndDate { get; set; }
    }
 }

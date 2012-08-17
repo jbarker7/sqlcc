@@ -4,10 +4,12 @@ namespace SQLCC.Core.Interfaces
 {
    internal interface IOutputProvider : IExtension
    {
-      bool SetUp();
+      bool SetUp(string traceName);
 
       bool SaveResults(DbCodeCoverage codeCoverage);
 
-      bool TearDown();
+      string GetStartedTraceName(); 
+
+      bool TearDown(string traceName);
    }
 }

@@ -11,11 +11,11 @@ namespace SQLCC.Core
          get { return "dbp"; }
       }
 
-      public abstract int StartTrace(string tracePath, object filterData);
+      public abstract void StartTrace(string traceName);
 
-      public abstract void StopTrace(int traceId);
+      public abstract void StopTrace(string traceName);
 
-      public abstract List<DbCodeSegment> GetTraceCodeSegments(string trace);
+      public abstract List<DbCodeSegment> GetTraceCodeSegments(string traceName);
 
       public abstract List<DbObject> GetAllObjects();
    }

@@ -5,11 +5,11 @@ namespace SQLCC.Core.Interfaces
 {
    internal interface IDbProvider : IExtension
    {
-      int StartTrace(string tracePath, object filterData);
+      void StartTrace(string traceName);
 
-      void StopTrace(int traceId);
+      void StopTrace(string traceName);
 
-      List<DbCodeSegment> GetTraceCodeSegments(string trace);
+      List<DbCodeSegment> GetTraceCodeSegments(string traceName);
 
       List<DbObject> GetAllObjects();
    }

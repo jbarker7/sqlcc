@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using SQLCC.Core;
 using SQLCC.Core.Objects;
 
@@ -8,43 +9,33 @@ namespace SQLCC.Impl.MsSqlProvider
    public class MsSqlProvider : DbProvider
    {
       private readonly PetaPoco.Database _db;
+      private readonly string _applicationName;
+      private readonly string _traceDir;
 
-      public MsSqlProvider(string connString, string traceDir, string traceFileName, string applicationName)
+      public MsSqlProvider(string connString, string traceDir, string applicationName)
       {
          _db = new PetaPoco.Database(connString, "System.Data.SqlClient");
+         _applicationName = applicationName;
+         _traceDir = traceDir;
       }
 
-      public override int StartTrace(string tracePath, object filterData)
+      public override void StartTrace(string traceName)
       {
-         if (!(filterData is string || filterData is int))
-            throw new ArgumentException("Trace must be either of type integer (PID) or string (Application Name) for MSSQL provider.");
+         var trace = Path.Combine(_traceDir, traceName);
 
          var sqlString = 
                @"declare @@rc int
 declare @@TraceID int
 declare @@maxfilesize bigint
 declare @@DateTime datetime
-
-set @@DateTime = DateAdd(hour, 12, GetDate()) -- trace stop
+set @@DateTime = DateAdd(hour, 12, GetDate()) -- auto trace stop
 set @@maxfilesize = 1000
-
--- Please replace the text InsertFileNameHere, with an appropriate
--- filename prefixed by a path, e.g., c:\MyFolder\MyTrace. The .trc extension
--- will be appended to the filename automatically. If you are writing from
--- remote server to local drive, please use UNC path and make sure server has
--- write access to your network share
-
 exec @@rc = sp_trace_create @@TraceID output, 0, N'" +
-               tracePath +
+               trace +
                @"', @@maxfilesize, @@Datetime
 if (@@rc != 0) goto error
 
--- Client side File and Table cannot be scripted
-
--- Set the events
-declare @@on bit
-set @@on = 1
-
+declare @@on bit;set @@on = 1;
 DECLARE @@TraceInfo TABLE(RowID INT identity(1,1) primary key, TraceColumn INT, TraceEvent INT);
 
 INSERT INTO @@TraceInfo
@@ -63,9 +54,7 @@ SELECT 31 UNION ALL
 SELECT 34 UNION ALL
 SELECT 55 UNION ALL
 SELECT 61 ) as c
-
 CROSS APPLY
-
 -- Events
 (SELECT 40 AS TraceEvent UNION ALL
 SELECT 41 UNION ALL
@@ -73,48 +62,43 @@ SELECT 42 UNION ALL
 SELECT 43 UNION ALL
 SELECT 44 ) as e
 
-declare @@i int, @@max int
-select @@i = min(RowID), @@max = max(RowID) from @@TraceInfo
-
+declare @@i int, @@max int;
+select @@i = min(RowID), @@max = max(RowID) from @@TraceInfo;
 declare @@TraceColumn int, @@TraceEvent int;
-
 while @@i <= @@max begin
-
 	SELECT
 		@@TraceColumn = TraceColumn,
 		@@TraceEvent = TraceEvent
 	FROM @@TraceInfo
 		WHERE RowID = @@i;
-	
 	execute sp_trace_setevent @@TraceID, @@TraceEvent, @@TraceColumn, @@on
 	set @@i = @@i + 1
 end
 ";
-
-         if (filterData is int)
-            sqlString += @"execute sp_trace_setfilter @@TraceID, 9, 0, 0, " + ((int) filterData) + @";";
-         else
-            sqlString += @"execute sp_trace_setfilter @@TraceID, 10, 0, 0, N'" + ((string)filterData).Replace("'", "") + @"';";
+         sqlString += @"execute sp_trace_setfilter @@TraceID, 8, 0, 0, N'" + Environment.MachineName + @"';";
+         sqlString += @"execute sp_trace_setfilter @@TraceID, 10, 0, 0, N'" + _applicationName.Replace("'", "") + @"';";
 
 sqlString += @"
 execute sp_trace_setstatus @@TraceID, 1 -- start
 error:
 select @@TraceID";
 
-         var traceId = _db.ExecuteScalar<int>(sqlString);
-
-         return traceId;
+         _db.ExecuteScalar<int>(sqlString);
       }
 
-      public override void StopTrace(int traceId)
+      public override void StopTrace(string traceName)
       {
-         _db.Execute(@"exec sp_trace_setstatus " + traceId + @", 0 -- stop
-exec sp_trace_setstatus " + traceId +  @", 2 -- delete");
+         var trace = Path.Combine(_traceDir, traceName + ".trc");
+         _db.Execute(@"
+DECLARE @@TraceID INT;
+SELECT @@TraceID = id FROM sys.traces Where [path] = '" + trace + @"'
+exec sp_trace_setstatus @@TraceID, 0 -- stop
+exec sp_trace_setstatus @@TraceID, 2 -- delete");
       }
 
-      public override List<DbCodeSegment> GetTraceCodeSegments(string trace)
+      public override List<DbCodeSegment> GetTraceCodeSegments(string traceName)
       {
-         trace = trace + ".trc";
+         var trace = Path.Combine(_traceDir, traceName + ".trc");
          var codeTrace = _db.Fetch<DbCodeSegment>(@"SELECT DISTINCT LineNumber, Offset as StartByte, IntegerData2 as EndByte, ObjectName
 FROM ::fn_trace_gettable('" + trace + @"', default) 
 WHERE EventClass IN (40,41,42,43,44) AND Offset IS NOT NULL AND ObjectName IS NOT NULL
