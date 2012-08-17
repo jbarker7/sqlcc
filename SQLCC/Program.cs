@@ -57,7 +57,12 @@ namespace SQLCC
                break;
             case "stop":
                {
-                  traceName = outputProvider.GetStartedTraceName();
+                  var startedTrace = outputProvider.GetStartedTraceName();
+
+                  if (startedTrace.EndDate != null)
+                     throw new ApplicationException("You must first start a trace. The last trace found was already completed.");
+
+                  traceName = startedTrace.Name;
 
                   dbProvider.StopTrace(traceName); // TODO: Do not hard code "2"
 

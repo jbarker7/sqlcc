@@ -8,7 +8,7 @@ namespace SQLCC.Core
       public string ArgumentNamespace { get { return "out"; } }
       public abstract bool SetUp(string traceName);
       public abstract bool SaveResults(DbCodeCoverage codeCoverage);
-      public abstract string GetStartedTraceName();
+      public abstract DbCodeCoverage GetStartedTraceName();
       public abstract bool TearDown(string traceName);
    }
 }

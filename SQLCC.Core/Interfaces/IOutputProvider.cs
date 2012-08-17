@@ -8,8 +8,9 @@ namespace SQLCC.Core.Interfaces
 
       bool SaveResults(DbCodeCoverage codeCoverage);
 
-      string GetStartedTraceName(); 
+      DbCodeCoverage GetStartedTraceName(); 
 
       bool TearDown(string traceName);
+
    }
 }

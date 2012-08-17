@@ -116,11 +116,11 @@ namespace SQLCC.Impl.HtmlCodeHighlighter
          return lastCodeCoverage;
       }
       
-      public override string GetStartedTraceName()
+      public override DbCodeCoverage GetStartedTraceName()
       {
          var codeCoverageFilePath = Path.Combine(_outputDir, "sqlcc.js");
          var codeCoverages = GetCodeCoverageFile(codeCoverageFilePath);
-         return GetLastTrace(codeCoverages).Name;
+         return GetLastTrace(codeCoverages);
       }
 
       public override bool TearDown(string traceName)
