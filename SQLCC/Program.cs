@@ -46,21 +46,29 @@ namespace SQLCC
          var codeHighlighter = loader.CreateTypeFromAssembly<HighlightCodeProvider>(arguments["hcp.provider"], arguments);
          var outputProvider = loader.CreateTypeFromAssembly<OutputProvider>(arguments["out.provider"], arguments);
 
+         var startedTrace = outputProvider.GetStartedTraceName();
+
          string traceName;
 
          switch (arguments["app.mode"].ToLower().Trim())
          {
             case "start":
+               if (startedTrace != null && startedTrace.EndDate == null)
+               {
+                  throw new ApplicationException("You cannot start more than one trace at a time!");
+               }
+
                traceName = DateTime.Now.ToString("yyyyMMddHHmmssFFF");
                outputProvider.SetUp(traceName);
                dbProvider.StartTrace(traceName);
                break;
             case "stop":
                {
-                  var startedTrace = outputProvider.GetStartedTraceName();
-
-                  if (startedTrace.EndDate != null)
-                     throw new ApplicationException("You must first start a trace. The last trace found was already completed.");
+                  if (startedTrace == null || startedTrace.EndDate != null)
+                  {
+                     throw new ApplicationException(
+                        "You must first start a trace. The last trace found was already completed.");
+                  }
 
                   traceName = startedTrace.Name;
 

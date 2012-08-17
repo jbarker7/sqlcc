@@ -1,6 +1,8 @@
 sqlcc
 =====
 
+Watch this for a quick summary: http://screencast.com/t/5I2N4GQgcb4
+
 **The Skinny**
 
 SQLCC is a code coverage tool that allows developers the ability to track which lines of code within stored procedures, functions, and triggers have been tested in SQL server by integration tests written by the developer.

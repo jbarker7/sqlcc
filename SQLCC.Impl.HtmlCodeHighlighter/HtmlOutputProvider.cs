@@ -80,7 +80,7 @@ namespace SQLCC.Impl.HtmlCodeHighlighter
          var codeCoverageFilePath = Path.Combine(_outputDir, "sqlcc.js");
          var codeCoverages = GetCodeCoverageFile(codeCoverageFilePath);
 
-         var lastCodeCoverage = GetLastTrace(codeCoverages);
+         var lastCodeCoverage = codeCoverages.LastOrDefault();
 
          codeCoverage.Name = lastCodeCoverage.Name;
          codeCoverage.StartDate = lastCodeCoverage.StartDate;
@@ -106,21 +106,12 @@ namespace SQLCC.Impl.HtmlCodeHighlighter
          return true;
       }
 
-      private DbCodeCoverage GetLastTrace(IEnumerable<DbCodeCoverage> codeCoverages)
-      {
-         var lastCodeCoverage = codeCoverages.Last();
-         if (lastCodeCoverage == null)
-         {
-            throw new ApplicationException("Code coverage not found.  Need to run 'start' command before running 'stop'.");
-         }
-         return lastCodeCoverage;
-      }
       
       public override DbCodeCoverage GetStartedTraceName()
       {
          var codeCoverageFilePath = Path.Combine(_outputDir, "sqlcc.js");
          var codeCoverages = GetCodeCoverageFile(codeCoverageFilePath);
-         return GetLastTrace(codeCoverages);
+         return codeCoverages.LastOrDefault();
       }
 
       public override bool TearDown(string traceName)
