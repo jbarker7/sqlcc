@@ -54,10 +54,10 @@ namespace SQLCC
       {
          var dbObjectClone = dbObject.Get();
 
-         if (dbObject.Code == null)
+         if (dbObjectClone.Code == null)
             return dbObjectClone;
 
-         if (dbObject.CoveredSegments.Count > 0)
+         if (dbObjectClone.CoveredSegments.Count > 0)
          {
             var codeWithHighlights = _dbCodeFormatter.FormatCodeWithHighlights(dbObjectClone.Code,
                                                                                dbObjectClone.CoveredSegments);
@@ -72,17 +72,16 @@ namespace SQLCC
             }
          }
 
-         var functionalCode = _dataScrubber.Scrub(dbObject.Code, "floc.scrub");
+         var functionalCode = _dataScrubber.Scrub(dbObjectClone.Code, "floc.scrub");
 
-         dbObjectClone.TotalLoc = dbObject.Code.Split('\n').Length;
-         dbObjectClone.TotalCharacters = dbObject.Code.Length;
+         dbObjectClone.TotalLoc = dbObjectClone.Code.Split('\n').Length;
+         dbObjectClone.TotalCharacters = dbObjectClone.Code.Length;
 
          dbObjectClone.TotalFloc = functionalCode.Split('\n').Length;
          dbObjectClone.TotalFunctionalCharacters = functionalCode.Length;
 
          dbObjectClone.CoveredPercent = (decimal)dbObjectClone.CoveredCharacters / dbObjectClone.TotalFunctionalCharacters;
          
-
          return dbObjectClone;
       }
 
@@ -98,7 +97,7 @@ namespace SQLCC
             codeCover.TotalFloc += obj.TotalFloc;
             codeCover.TotalCharacters += obj.TotalCharacters;
             codeCover.TotalFunctionalCharacters += obj.TotalFunctionalCharacters;
-            codeCover.CoveredCharacters += (int)Math.Round(obj.TotalCharacters * obj.CoveredPercent);
+            codeCover.CoveredCharacters += (int)Math.Round(obj.TotalFunctionalCharacters * obj.CoveredPercent);
             codeCover.CoveredLinesOfCode += (int)Math.Round(obj.TotalLoc * obj.CoveredPercent);
          }
          codeCover.CoveredPercent = ((decimal)codeCover.CoveredCharacters / codeCover.TotalFunctionalCharacters);

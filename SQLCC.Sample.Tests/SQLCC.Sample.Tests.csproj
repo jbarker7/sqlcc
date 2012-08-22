@@ -3,15 +3,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
+    <ProductVersion>
+    </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{8D51B0CA-E25C-430F-A3CD-4A4AFEB433E4}</ProjectGuid>
+    <ProjectGuid>{0275F093-7EC5-4442-A98A-C08765DCE713}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SQLCC.Core</RootNamespace>
-    <AssemblyName>SQLCC.Core</AssemblyName>
+    <RootNamespace>SQLCC.Sample.Tests</RootNamespace>
+    <AssemblyName>SQLCC.Sample.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,36 +33,35 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DbProvider.cs" />
-    <Compile Include="DbTraceCodeFormatter.cs" />
-    <Compile Include="Helpers\DataScrubber.cs" />
-    <Compile Include="Helpers\DictionaryHelper.cs" />
-    <Compile Include="HighlightCodeProvider.cs" />
-    <Compile Include="Interfaces\IDbTraceCodeFormatter.cs" />
-    <Compile Include="Interfaces\IDbProvider.cs" />
-    <Compile Include="Interfaces\IExtension.cs" />
-    <Compile Include="Interfaces\IHighlightCodeProvider.cs" />
-    <Compile Include="Interfaces\IOutputProvider.cs" />
-    <Compile Include="Objects\DbCodeCoverage.cs" />
-    <Compile Include="Objects\DbCodeSegment.cs" />
-    <Compile Include="Objects\DbObject.cs" />
-    <Compile Include="Objects\Mode.cs" />
-    <Compile Include="OutputProvider.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tests\DbObjectTestActor.cs" />
-    <Compile Include="Tests\DbObjectTestArranger.cs" />
+    <CodeAnalysisDependentAssemblyPaths Condition=" '$(VS100COMNTOOLS)' != '' " Include="$(VS100COMNTOOLS)..\IDE\PrivateAssemblies">
+      <Visible>False</Visible>
+    </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SpTestSprocActor.cs" />
+    <Compile Include="SpTestSprocTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SQLCC.Core\SQLCC.Core.csproj">
+      <Project>{8D51B0CA-E25C-430F-A3CD-4A4AFEB433E4}</Project>
+      <Name>SQLCC.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SQLCC.Impl.MsSqlProvider\SQLCC.Impl.MsSqlProvider.csproj">
+      <Project>{B07A4B41-E8EB-41CC-98E6-2A8D042EEB5D}</Project>
+      <Name>SQLCC.Impl.MsSqlProvider</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
