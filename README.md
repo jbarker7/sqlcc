@@ -21,11 +21,11 @@ In its most simple form, modify the App.config with a few values (i.e. connectio
 
     sqlcc --app.mode=start
 
-    "C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\mstest.exe" /testcontainer:SQLCC.Sample.Tests.dll
+    mstest.exe /testcontainer:SQLCC.Sample.Tests.dll
 
     sqlcc --app.mode=stop
 
-You can also literally call MSTest or any other test runner.  Running the above generates a set of HTML files or you can alternatively create your own OutputProvider and store the results in another file format or in the database for querying.
+Running the above generates a set of HTML files or you can alternatively create your own OutputProvider and store the results in another file format or in the database for querying.
 
 **How Does it Work?**
 
