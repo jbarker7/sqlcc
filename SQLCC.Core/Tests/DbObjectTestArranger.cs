@@ -1,44 +1,21 @@
-﻿using System.Data;
-
-namespace SQLCC.Core.Tests
+﻿namespace SQLCC.Core.Tests
 {
-   public abstract class DbObjectTestArranger<T> : DbObjectTestActor<T>
-   {
-      private readonly DbObjectTestActor<T> _objectTest;
-
-      protected DbObjectTestArranger(DbObjectTestActor<T> objectTest)
-      {
-         _objectTest = objectTest;
-      }
-
-      public abstract void SetUp();
-      public abstract void TearDown();
-
-      public sealed override T Execute(params object[] parameters)
-      {
-         this.SetUp();
-         var returnVal = _objectTest.Execute(parameters);
-         this.TearDown();
-         return returnVal;
-      }
-   }
-
    public abstract class DbObjectTestArranger : DbObjectTestActor
    {
-      private readonly DbObjectTestActor _objectTest;
+      private readonly DbObjectTestActor _testActor;
 
-      protected DbObjectTestArranger(DbObjectTestActor objectTest)
+      protected DbObjectTestArranger(DbObjectTestActor testActor)
       {
-         _objectTest = objectTest;
+         _testActor = testActor;
       }
 
-      public abstract void SetUp();
-      public abstract void TearDown();
+      protected abstract void SetUp();
+      protected abstract void TearDown();
 
-      public sealed override DataSet Execute(params object[] parameters)
+      public sealed override object Execute(params object[] parameters)
       {
          this.SetUp();
-         var returnVal = _objectTest.Execute(parameters);
+         var returnVal = _testActor.Execute(parameters);
          this.TearDown();
          return returnVal;
       }

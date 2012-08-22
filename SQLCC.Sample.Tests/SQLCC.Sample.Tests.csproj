@@ -48,6 +48,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SpFooTestSprocActor.cs" />
+    <Compile Include="SpFooTestSprocTests.cs" />
     <Compile Include="SpTestSprocActor.cs" />
     <Compile Include="SpTestSprocTests.cs" />
   </ItemGroup>

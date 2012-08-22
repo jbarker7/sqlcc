@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace SQLCC.Sample.Tests
 {
@@ -20,10 +21,10 @@ namespace SQLCC.Sample.Tests
          var prereq = new SpTestSprocArranger(_objectTest);
 
          // Act
-         var result = prereq.Execute("all");
+         var result = prereq.Execute<List<SpTestSprocReturn>>("all");
 
          // Assert
-         Assert.AreEqual(result.Count, 3);
+         Assert.AreEqual(3, result.Count);
       }
 
       [TestMethod]
@@ -33,11 +34,39 @@ namespace SQLCC.Sample.Tests
          var prereq = new SpTestSprocArranger(_objectTest);
 
          // Act
-         var result = prereq.Execute("Test1");
+         var result = prereq.Execute<List<SpTestSprocReturn>>("Test1");
 
          // Assert
-         Assert.AreEqual(result.Count, 1);
-         Assert.AreEqual(result[0].Name, "Test1");
+         Assert.AreEqual(1, result.Count);
+         Assert.AreEqual("Test1", result[0].Name);
+      }
+
+      [TestMethod]
+      public void SpTestSprocActorWhereIsFoo()
+      {
+         // Arrange
+         var arranger = new SpTestSprocArranger(new SpFooTestSprocArranger(_objectTest));
+
+         // Act
+         var result = arranger.Execute<List<SpTestSprocReturn>>("foo");
+
+         // Assert
+         Assert.AreEqual(4, result.Count);
+         Assert.AreEqual("Foo1", result[0].Name);
+      }
+
+      [TestMethod]
+      public void SpTestSprocActorWhereStartsWithFoo()
+      {
+         // Arrange
+         var arranger = new SpTestSprocArranger(new SpFooTestSprocArranger(_objectTest));
+
+         // Act
+         var result = arranger.Execute<List<SpTestSprocReturn>>("foofoo");
+
+         // Assert
+         Assert.AreEqual(1, result.Count);
+         Assert.AreEqual("StaticVar", result[0].Name);
       }
 
    }

@@ -1,23 +1,18 @@
-﻿using System.Data;
-
-namespace SQLCC.Core.Tests
+﻿namespace SQLCC.Core.Tests
 {
-   public abstract class DbObjectTestActor : IDbObjectTest
+   public abstract class DbObjectTestActor : IDbObjectTestActor
    {
-      public abstract DataSet Execute(params object[] parameters);
-   }
-   
-   public abstract class DbObjectTestActor<T> : IDbObjectTest<T>
-   {
-      public abstract T Execute(params object[] parameters);
-   }
-   
-   public interface IDbObjectTest : IDbObjectTest<DataSet>
-   {
+      public abstract object Execute(params object[] parameters);
+
+      public T Execute<T>(params object[] parameters)
+      {
+         return (T)this.Execute(parameters);
+      }
    }
 
-   public interface IDbObjectTest<T>
+   public interface IDbObjectTestActor
    {
-      T Execute(params object[] parameters);
+      object Execute(params object[] parameters);
    }
+
 }
