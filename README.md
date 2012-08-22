@@ -21,7 +21,7 @@ In its most simple form, modify the App.config with a few values (i.e. connectio
 
     sqlcc --app.mode=start
 
-    C:\Code\ConsoleApplication1\ConsoleApplication1\bin\Debug\YourTestApp.exe
+    "C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\mstest.exe" /testcontainer:SQLCC.Sample.Tests.dll
 
     sqlcc --app.mode=stop
 
