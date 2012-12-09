@@ -15,6 +15,8 @@ namespace SQLCC.Core
 
       public abstract void StopTrace(string traceName);
 
+      public abstract bool IsTraceRunning(string traceName);
+
       public abstract List<DbCodeSegment> GetTraceCodeSegments(string traceName);
 
       public abstract List<DbObject> GetAllObjects();

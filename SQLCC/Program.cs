@@ -5,6 +5,7 @@ using NDesk.Options;
 using SQLCC.Core;
 using SQLCC.Core.Helpers;
 using SQLCC.Core.Objects;
+using SQLCC.Commands;
 
 namespace SQLCC
 {
@@ -46,45 +47,22 @@ namespace SQLCC
          var codeHighlighter = loader.CreateTypeFromAssembly<HighlightCodeProvider>(arguments["hcp.provider"], arguments);
          var outputProvider = loader.CreateTypeFromAssembly<OutputProvider>(arguments["out.provider"], arguments);
 
-         var startedTrace = outputProvider.GetStartedTraceName();
-
-         string traceName;
-
          switch (arguments["app.mode"].ToLower().Trim())
          {
-            case "start":
-               if (startedTrace != null && startedTrace.EndDate == null)
-               {
-                  throw new ApplicationException("You cannot start more than one trace at a time!");
-               }
-
-               traceName = DateTime.Now.ToString("yyyyMMddHHmmssFFF");
-               outputProvider.SetUp(traceName);
-               dbProvider.StartTrace(traceName);
+            case "generate":
+               var generateCommand = new GenerateOutputCommand(dbProvider, dbCodeFormatter, codeHighlighter, outputProvider, arguments["app.traceName"]);
+               generateCommand.Execute();
                break;
+
+            case "start":
+               var startCommand = new StartCommand(outputProvider, dbProvider, arguments["app.traceName"]);
+               startCommand.Execute();
+               break;
+
             case "stop":
                {
-                  if (startedTrace == null || startedTrace.EndDate != null)
-                  {
-                     throw new ApplicationException(
-                        "You must first start a trace. The last trace found was already completed.");
-                  }
-
-                  traceName = startedTrace.Name;
-
-                  dbProvider.StopTrace(traceName); // TODO: Do not hard code "2"
-
-                  var codeCoverageProcessor = new CodeCoverageProcessor(dbCodeFormatter, codeHighlighter);
-
-                  var codeCover = new DbCodeCoverage();
-                  codeCover.Name = traceName;
-
-                  codeCover.TotalObjects = dbProvider.GetAllObjects();
-                  codeCover.TraceCodeSegments = dbProvider.GetTraceCodeSegments(traceName);
-
-                  codeCoverageProcessor.ProcessAllCoverage(codeCover);
-
-                  outputProvider.SaveResults(codeCover);
+                  var stopCommand = new StopCommand(dbProvider, outputProvider, arguments["app.traceName"]);
+                  stopCommand.Execute();
                }
                break;
          }
