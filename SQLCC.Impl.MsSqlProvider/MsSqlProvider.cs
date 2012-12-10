@@ -86,6 +86,17 @@ select @@TraceID";
          _db.ExecuteScalar<int>(sqlString);
       }
 
+      public override bool IsTraceRunning(string traceName)
+      {
+         var trace = Path.Combine(_traceDir, traceName + ".trc");
+         var traceCount = _db.ExecuteScalar<int>(@"SELECT TraceCount = count(1) FROM sys.traces Where [path] = '" + trace + @"'");
+
+         bool isTraceRunning = (traceCount > 0);
+
+         return isTraceRunning;
+      }
+
+
       public override void StopTrace(string traceName)
       {
          var trace = Path.Combine(_traceDir, traceName + ".trc");

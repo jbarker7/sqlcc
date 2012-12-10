@@ -9,6 +9,8 @@ namespace SQLCC.Core.Interfaces
 
       void StopTrace(string traceName);
 
+      bool IsTraceRunning(string traceName);
+
       List<DbCodeSegment> GetTraceCodeSegments(string traceName);
 
       List<DbObject> GetAllObjects();
