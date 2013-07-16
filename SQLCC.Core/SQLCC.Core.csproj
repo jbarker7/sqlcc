@@ -46,6 +46,7 @@
     <Compile Include="Helpers\DataScrubber.cs" />
     <Compile Include="Helpers\DictionaryHelper.cs" />
     <Compile Include="HighlightCodeProvider.cs" />
+    <Compile Include="Interfaces\ICommand.cs" />
     <Compile Include="Interfaces\IDbTraceCodeFormatter.cs" />
     <Compile Include="Interfaces\IDbProvider.cs" />
     <Compile Include="Interfaces\IExtension.cs" />
@@ -54,11 +55,8 @@
     <Compile Include="Objects\DbCodeCoverage.cs" />
     <Compile Include="Objects\DbCodeSegment.cs" />
     <Compile Include="Objects\DbObject.cs" />
-    <Compile Include="Objects\Mode.cs" />
     <Compile Include="OutputProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tests\DbObjectTestActor.cs" />
-    <Compile Include="Tests\DbObjectTestArranger.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

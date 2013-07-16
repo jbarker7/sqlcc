@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using SQLCC.Core;
+using SQLCC.Core.Interfaces;
 using SQLCC.Core.Objects;
 
 namespace SQLCC.Commands
 {
-   public class GenerateOutputCommand
+   public class GenerateOutputCommand : ICommand
    {
       private DbProvider _dbProvider;
       private DbTraceCodeFormatter _dbCodeFormatter;

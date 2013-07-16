@@ -19,11 +19,13 @@ For now, Microsoft SQL Server is supported, but has the capability of being expa
 
 In its most simple form, modify the App.config with a few values (i.e. connection string, application name, etc.) and then execute the following:
 
-    sqlcc --app.mode=start
+    sqlcc --app.command=start
 
     mstest.exe /testcontainer:SQLCC.Sample.Tests.dll
 
-    sqlcc --app.mode=stop
+    sqlcc --app.command=generate
+
+    sqlcc --app.command=stop
 
 Running the above generates a set of HTML files or you can alternatively create your own OutputProvider and store the results in another file format or in the database for querying.
 

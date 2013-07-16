@@ -11,6 +11,7 @@ namespace SQLCC.Impl.MsSqlProvider
       private readonly PetaPoco.Database _db;
       private readonly string _applicationName;
       private readonly string _traceDir;
+      private const string TraceFileFormat = "SQLCC_{0}.trc";
 
       public MsSqlProvider(string connString, string traceDir, string applicationName)
       {
@@ -21,7 +22,7 @@ namespace SQLCC.Impl.MsSqlProvider
 
       public override void StartTrace(string traceName)
       {
-         var trace = Path.Combine(_traceDir, traceName);
+         var trace = Path.Combine(_traceDir, Path.GetFileNameWithoutExtension(string.Format(TraceFileFormat, traceName)));
 
          var sqlString = 
                @"declare @@rc int
@@ -86,9 +87,15 @@ select @@TraceID";
          _db.ExecuteScalar<int>(sqlString);
       }
 
+      public override string GetLastTraceName()
+      {
+         var tracePath = _db.ExecuteScalar<string>(@"SELECT TOP 1 [path] FROM sys.traces Where [path] like '%\SQLCC[_]%.trc' ORDER BY start_time DESC");
+         return Path.GetFileNameWithoutExtension(tracePath);
+      }
+
       public override bool IsTraceRunning(string traceName)
       {
-         var trace = Path.Combine(_traceDir, traceName + ".trc");
+         var trace = Path.Combine(_traceDir, string.Format(TraceFileFormat, traceName));
          var traceCount = _db.ExecuteScalar<int>(@"SELECT TraceCount = count(1) FROM sys.traces Where [path] = '" + trace + @"'");
 
          bool isTraceRunning = (traceCount > 0);
@@ -96,10 +103,9 @@ select @@TraceID";
          return isTraceRunning;
       }
 
-
       public override void StopTrace(string traceName)
       {
-         var trace = Path.Combine(_traceDir, traceName + ".trc");
+         var trace = Path.Combine(_traceDir, string.Format(TraceFileFormat, traceName));
          _db.Execute(@"
 DECLARE @@TraceID INT;
 SELECT @@TraceID = id FROM sys.traces Where [path] = '" + trace + @"'
@@ -109,7 +115,7 @@ exec sp_trace_setstatus @@TraceID, 2 -- delete");
 
       public override List<DbCodeSegment> GetTraceCodeSegments(string traceName)
       {
-         var trace = Path.Combine(_traceDir, traceName + ".trc");
+         var trace = Path.Combine(_traceDir, string.Format(TraceFileFormat, traceName));
          var codeTrace = _db.Fetch<DbCodeSegment>(@"SELECT DISTINCT LineNumber, Offset as StartByte, IntegerData2 as EndByte, ObjectName
 FROM ::fn_trace_gettable('" + trace + @"', default) 
 WHERE EventClass IN (40,41,42,43,44) AND Offset IS NOT NULL AND ObjectName IS NOT NULL

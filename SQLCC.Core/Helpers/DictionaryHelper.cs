@@ -26,17 +26,5 @@ namespace SQLCC.Core.Helpers
             dictionary.Add(key, value);
          }
       }
-
-      //public static void AddOrUpdate<T>(this Dictionary<string, string> dictionary, string key, T value)
-      //{
-      //   if (dictionary.ContainsKey(key))
-      //   {
-      //      dictionary[key] = Convert<T>(value);
-      //   }
-      //   else
-      //   {
-      //      dictionary.Add(key, value);
-      //   }
-      //}
    }
 }

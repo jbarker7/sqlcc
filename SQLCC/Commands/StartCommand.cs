@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using SQLCC.Core;
+using SQLCC.Core.Interfaces;
 
 namespace SQLCC.Commands
 {
-   public class StartCommand
+   public class StartCommand : ICommand
    {
       private OutputProvider _outputProvider;
       private DbProvider _dbProvider;

@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using SQLCC.Core;
+using SQLCC.Core.Interfaces;
 
 namespace SQLCC.Commands
 {
-   public class StopCommand
+   public class StopCommand : ICommand
    {
       private DbProvider _dbProvider;
       private OutputProvider _outputProvider;
@@ -27,7 +28,7 @@ namespace SQLCC.Commands
                "You must first start a trace. The last trace found was already completed.");
          }
 
-         _dbProvider.StopTrace(_traceName); // TODO: Do not hard code "2"
+         _dbProvider.StopTrace(_traceName);
       }
    }
 }

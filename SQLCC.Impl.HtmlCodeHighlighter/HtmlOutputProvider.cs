@@ -105,7 +105,6 @@ namespace SQLCC.Impl.HtmlCodeHighlighter
 
          return true;
       }
-
       
       public override DbCodeCoverage GetStartedTraceName()
       {

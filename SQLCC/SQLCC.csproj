@@ -45,7 +45,6 @@
   <ItemGroup>
     <Compile Include="CodeCoverageProcessor.cs" />
     <Compile Include="AssemblyLoader.cs" />
-    <Compile Include="CodeHighlighter.cs" />
     <Compile Include="Commands\GenerateOutputCommand.cs" />
     <Compile Include="Libraries\Options.cs" />
     <Compile Include="Program.cs" />

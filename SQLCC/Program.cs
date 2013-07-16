@@ -13,18 +13,61 @@ namespace SQLCC
    {
       static void Main(string[] args)
       {
-         var arguments = new Dictionary<string, string>();
+         var arguments = ParseCommandLine(args);
 
-         // App.Config Settings
-         var appSettingKeys = ConfigurationManager.AppSettings.Keys;
-         for (var i = 0; i < appSettingKeys.Count; i++)
+         var loader = new AssemblyLoader();
+         var dbProvider = loader.CreateTypeFromAssembly<DbProvider>(arguments["dbp.provider"], arguments);
+         var dbCodeFormatter = loader.CreateTypeFromAssembly<DbTraceCodeFormatter>(arguments["tcf.provider"], arguments);
+         var codeHighlighter = loader.CreateTypeFromAssembly<HighlightCodeProvider>(arguments["hcp.provider"], arguments);
+         var outputProvider = loader.CreateTypeFromAssembly<OutputProvider>(arguments["out.provider"], arguments);
+
+         var command = arguments["app.command"].ToLower().Trim();
+
+         // Get trace name from provided, last trace, or generate one.
+         var traceName = arguments["app.traceName"];
+         if (traceName == null && command != "start")
          {
-            var key = appSettingKeys[i];
-            arguments.AddOrUpdate(key, ConfigurationManager.AppSettings[key]);
+            traceName = dbProvider.GetLastTraceName();
+         }
+         else if (traceName == null && command == "start")
+         {
+            traceName = DateTime.Now.ToString("yyyyMMddHHmmss");
+         }
+         
+         switch (command)
+         {
+            case "generate":
+               var generateCommand = new GenerateOutputCommand(dbProvider, dbCodeFormatter, codeHighlighter, outputProvider, traceName);
+               generateCommand.Execute();
+               break;
+
+            case "start":
+               var startCommand = new StartCommand(outputProvider, dbProvider, traceName);
+               startCommand.Execute();
+               break;
+
+            case "stop":
+               var stopCommand = new StopCommand(dbProvider, outputProvider, traceName);
+               stopCommand.Execute();
+               break;
          }
 
-         // Manual override through CLI.
-         var p = new OptionSet()
+      }
+
+      public static Dictionary<string, string> ParseCommandLine(string[] args)
+      {
+          var arguments = new Dictionary<string, string>();
+
+          // App.Config Settings
+          var appSettingKeys = ConfigurationManager.AppSettings.Keys;
+          for (var i = 0; i < appSettingKeys.Count; i++)
+          {
+              var key = appSettingKeys[i];
+              arguments.AddOrUpdate(key, ConfigurationManager.AppSettings[key]);
+          }
+
+          // Manual override through CLI.
+          var p = new OptionSet()
                     {
                        {
                           "<>", v =>
@@ -39,34 +82,8 @@ namespace SQLCC
                           }
                     };
 
-         p.Parse(args);
-
-         var loader = new AssemblyLoader();
-         var dbProvider = loader.CreateTypeFromAssembly<DbProvider>(arguments["dbp.provider"], arguments);
-         var dbCodeFormatter = loader.CreateTypeFromAssembly<DbTraceCodeFormatter>(arguments["tcf.provider"], arguments);
-         var codeHighlighter = loader.CreateTypeFromAssembly<HighlightCodeProvider>(arguments["hcp.provider"], arguments);
-         var outputProvider = loader.CreateTypeFromAssembly<OutputProvider>(arguments["out.provider"], arguments);
-
-         switch (arguments["app.mode"].ToLower().Trim())
-         {
-            case "generate":
-               var generateCommand = new GenerateOutputCommand(dbProvider, dbCodeFormatter, codeHighlighter, outputProvider, arguments["app.traceName"]);
-               generateCommand.Execute();
-               break;
-
-            case "start":
-               var startCommand = new StartCommand(outputProvider, dbProvider, arguments["app.traceName"]);
-               startCommand.Execute();
-               break;
-
-            case "stop":
-               {
-                  var stopCommand = new StopCommand(dbProvider, outputProvider, arguments["app.traceName"]);
-                  stopCommand.Execute();
-               }
-               break;
-         }
-
+          p.Parse(args);
+          return arguments;
       }
 
    }
