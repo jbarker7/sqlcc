@@ -23,9 +23,7 @@ In its most simple form, modify the App.config with a few values (i.e. connectio
 
     mstest.exe /testcontainer:SQLCC.Sample.Tests.dll
 
-    sqlcc --app.command=generate
-
-    sqlcc --app.command=stop
+    sqlcc --app.command=finish
 
 Running the above generates a set of HTML files or you can alternatively create your own OutputProvider and store the results in another file format or in the database for querying.
 

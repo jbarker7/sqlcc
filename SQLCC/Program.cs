@@ -50,6 +50,12 @@ namespace SQLCC
                var stopCommand = new StopCommand(dbProvider, outputProvider, traceName);
                stopCommand.Execute();
                break;
+
+            case "finish":
+               new GenerateOutputCommand(dbProvider, dbCodeFormatter, codeHighlighter, outputProvider, traceName).Execute();
+               new StopCommand(dbProvider, outputProvider, traceName).Execute();
+
+               break;
          }
 
       }
