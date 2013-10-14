@@ -16,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLCC.Tests", "SQLCC.Tests\SQLCC.Tests.csproj", "{80887635-8FAC-40F4-BAC4-058B0958E27F}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = SQLCC.vsmdi
@@ -69,6 +71,16 @@ Global
 		{B07A4B41-E8EB-41CC-98E6-2A8D042EEB5D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{B07A4B41-E8EB-41CC-98E6-2A8D042EEB5D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{B07A4B41-E8EB-41CC-98E6-2A8D042EEB5D}.Release|x86.ActiveCfg = Release|Any CPU
+		{80887635-8FAC-40F4-BAC4-058B0958E27F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80887635-8FAC-40F4-BAC4-058B0958E27F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80887635-8FAC-40F4-BAC4-058B0958E27F}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{80887635-8FAC-40F4-BAC4-058B0958E27F}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{80887635-8FAC-40F4-BAC4-058B0958E27F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{80887635-8FAC-40F4-BAC4-058B0958E27F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80887635-8FAC-40F4-BAC4-058B0958E27F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80887635-8FAC-40F4-BAC4-058B0958E27F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{80887635-8FAC-40F4-BAC4-058B0958E27F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{80887635-8FAC-40F4-BAC4-058B0958E27F}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
