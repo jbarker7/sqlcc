@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using NDesk.Options;
 using SQLCC.Core;
+using SQLCC.Core.Interfaces;
 using SQLCC.Core.Helpers;
 using SQLCC.Core.Objects;
 using SQLCC.Commands;
@@ -21,20 +22,20 @@ namespace SQLCC
          var codeHighlighter = loader.CreateTypeFromAssembly<HighlightCodeProvider>(arguments["hcp.provider"], arguments);
          var outputProvider = loader.CreateTypeFromAssembly<OutputProvider>(arguments["out.provider"], arguments);
 
-         var command = arguments["app.command"].ToLower().Trim();
+         string command;
+	      arguments.TryGetValue("app.command", out command);
+		  if (string.IsNullOrEmpty(command))
+		  {
+			  Console.Out.WriteLine("Invalid app.command. Valid commands are generate, start, stop and finish.\n"
+				  + "Usage: sqlcc --app.command=[start|stop|generate|finish] [commands]");
+			  return;
+		  }
+         command = command.ToLower().Trim();
 
-         // Get trace name from provided, last trace, or generate one.
-         var traceName = arguments["app.traceName"];
-         if (traceName == null && command != "start")
-         {
-            traceName = dbProvider.GetLastTraceName();
-         }
-         else if (traceName == null && command == "start")
-         {
-            traceName = DateTime.Now.ToString("yyyyMMddHHmmss");
-         }
-         
-         switch (command)
+         var traceName = ArgumentProvider.GetTraceName(arguments, command, dbProvider);
+	      Console.Out.WriteLine("Trace name: " + traceName);
+
+	      switch (command)
          {
             case "generate":
                var generateCommand = new GenerateOutputCommand(dbProvider, dbCodeFormatter, codeHighlighter, outputProvider, traceName);
@@ -60,7 +61,7 @@ namespace SQLCC
 
       }
 
-      public static Dictionary<string, string> ParseCommandLine(string[] args)
+	   public static Dictionary<string, string> ParseCommandLine(string[] args)
       {
           var arguments = new Dictionary<string, string>();
 
