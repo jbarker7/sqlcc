@@ -13,11 +13,11 @@ namespace SQLCC.Impl.MsSqlProvider
       private readonly string _traceDir;
       private const string TraceFileFormat = "SQLCC_{0}.trc";
 
-      public MsSqlProvider(string connString, string traceDir, string applicationName)
+      public MsSqlProvider(string databaseConnectionString, string databaseTraceDirectory, string databaseApplicationName)
       {
-         _db = new PetaPoco.Database(connString, "System.Data.SqlClient");
-         _applicationName = applicationName;
-         _traceDir = traceDir;
+          _db = new PetaPoco.Database(databaseConnectionString, "System.Data.SqlClient");
+          _applicationName = databaseApplicationName;
+         _traceDir = databaseTraceDirectory;
       }
 
       public override void StartTrace(string traceName)

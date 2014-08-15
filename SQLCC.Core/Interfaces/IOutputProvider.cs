@@ -2,7 +2,7 @@
 
 namespace SQLCC.Core.Interfaces
 {
-   internal interface IOutputProvider : IExtension
+   internal interface IOutputProvider 
    {
       bool SetUp(string traceName);
 

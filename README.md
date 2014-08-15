@@ -19,11 +19,9 @@ For now, Microsoft SQL Server is supported, but has the capability of being expa
 
 In its most simple form, modify the App.config with a few values (i.e. connection string, application name, etc.) and then execute the following:
 
-    sqlcc --app.command=start
+    sqlcc --action=execute --target="mstest.exe" --targetArgs="/testcontainer:SQLCC.Sample.Tests.dll" --traceFileName="TraceFile"
 
-    mstest.exe /testcontainer:SQLCC.Sample.Tests.dll
-
-    sqlcc --app.command=finish
+    sqlcc --action=generate --traceFileName="TraceFile"
 
 Running the above generates a set of HTML files or you can alternatively create your own OutputProvider and store the results in another file format or in the database for querying.
 
@@ -41,6 +39,6 @@ Yes, for the most part, its a really rough proof of concept (aka alpha).  Defini
 
 **Troubleshooting**
 
-- Open the App.config and modify the parameters.  The important ones are "dbp.connString" which is your connection string to your database which you are running your tests against, "dbp.applicationName" is your Application Name as described above under "How Does it Work?", "dbp.traceDir" is the directory which you would like to store your trace files (currently outputs *.trc files on the server)-- this is on the SQL server (must have read/write access to this directory), "out.outputDir" is the output directory for the HTML files that are generated.
+- Open the App.config and modify the parameters.  The important ones are "databaseConnectionString" which is your connection string to your database which you are running your tests against, "databaseApplicationName" is your Application Name as described above under "How Does it Work?", "traceFileName" is the directory which you would like to store your trace files (currently outputs *.trc files on the server)-- this is on the SQL server (must have read/write access to this directory), "outputDirectory" is the output directory for the HTML files that are generated.
 
 - Ensure that you have copied both "SQLCC.Impl.HtmlCodeHighlighter.dll" and "SQLCC.Impl.MsSqlProvider.dll" into the same directory as "SQLCC.exe".  The App.config is configured to use the providers located in these assemblies.

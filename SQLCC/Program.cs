@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using NDesk.Options;
 using SQLCC.Core;
 using SQLCC.Core.Helpers;
@@ -14,51 +15,64 @@ namespace SQLCC
       static void Main(string[] args)
       {
          var arguments = ParseCommandLine(args);
+         RequiredAttributes(arguments, 
+             "databaseProvider", 
+             "codeFormatProvider", 
+             "codeHighlightProvider", 
+             "outputProvider", 
+             "action"
+             );
 
          var loader = new AssemblyLoader();
-         var dbProvider = loader.CreateTypeFromAssembly<DbProvider>(arguments["dbp.provider"], arguments);
-         var dbCodeFormatter = loader.CreateTypeFromAssembly<DbTraceCodeFormatter>(arguments["tcf.provider"], arguments);
-         var codeHighlighter = loader.CreateTypeFromAssembly<HighlightCodeProvider>(arguments["hcp.provider"], arguments);
-         var outputProvider = loader.CreateTypeFromAssembly<OutputProvider>(arguments["out.provider"], arguments);
+         var dbProvider = loader.CreateTypeFromAssembly<DbProvider>(arguments["databaseProvider"], arguments);
+         var dbCodeFormatter = loader.CreateTypeFromAssembly<DbTraceCodeFormatter>(arguments["codeFormatProvider"], arguments);
+         var codeHighlighter = loader.CreateTypeFromAssembly<HighlightCodeProvider>(arguments["codeHighlightProvider"], arguments);
+         var outputProvider = loader.CreateTypeFromAssembly<OutputProvider>(arguments["outputProvider"], arguments);
 
-         var command = arguments["app.command"].ToLower().Trim();
+         var command = arguments["action"].ToLower().Trim();
 
-         // Get trace name from provided, last trace, or generate one.
-         var traceName = arguments["app.traceName"];
-         if (traceName == null && command != "start")
-         {
-            traceName = dbProvider.GetLastTraceName();
-         }
-         else if (traceName == null && command == "start")
-         {
-            traceName = DateTime.Now.ToString("yyyyMMddHHmmss");
-         }
-         
+          var traceName = arguments.ContainsKey("traceFileName") ? arguments["traceFileName"] : null;
          switch (command)
          {
             case "generate":
+
+                 RequiredAttributes(arguments,
+                 "traceFileName"
+                );
+               
                var generateCommand = new GenerateOutputCommand(dbProvider, dbCodeFormatter, codeHighlighter, outputProvider, traceName);
                generateCommand.Execute();
                break;
 
-            case "start":
+            case "execute":
+                
+                RequiredAttributes(arguments,
+                 "target"
+                );
+                 
+               traceName = traceName ?? DateTime.Now.ToString("yyyyMMddHHmmss");
                var startCommand = new StartCommand(outputProvider, dbProvider, traceName);
                startCommand.Execute();
-               break;
 
-            case "stop":
-               var stopCommand = new StopCommand(dbProvider, outputProvider, traceName);
-               stopCommand.Execute();
-               break;
-
-            case "finish":
-               new GenerateOutputCommand(dbProvider, dbCodeFormatter, codeHighlighter, outputProvider, traceName).Execute();
-               new StopCommand(dbProvider, outputProvider, traceName).Execute();
+                 var executeCommand = new ExecuteCommand(arguments["target"], arguments.ContainsKey("targetArgs") ? arguments["targetArgs"] : string.Empty);
+                 executeCommand.Execute();
+                                
+                 var stopCommand = new StopCommand(dbProvider, outputProvider, traceName);
+                 stopCommand.Execute();
 
                break;
          }
 
       }
+
+       public static void RequiredAttributes(Dictionary<string, string> args, params string[] requiredArgs)
+       {
+           foreach (var arg in requiredArgs)
+           {
+               if (!args.ContainsKey(arg))
+                   throw new ApplicationException("Required argument " + arg + " not found!");
+           }
+       }
 
       public static Dictionary<string, string> ParseCommandLine(string[] args)
       {

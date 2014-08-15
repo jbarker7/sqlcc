@@ -3,7 +3,7 @@ using SQLCC.Core.Objects;
 
 namespace SQLCC.Core.Interfaces
 {
-   internal interface IDbProvider : IExtension
+   internal interface IDbProvider 
    {
       void StartTrace(string traceName);
 

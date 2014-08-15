@@ -3,7 +3,7 @@ using SQLCC.Core.Objects;
 
 namespace SQLCC.Core.Interfaces
 {
-   internal interface IDbTraceCodeFormatter : IExtension
+   internal interface IDbTraceCodeFormatter 
    {
       string StartHighlightMarkUp { get;  }
       string EndHighlightMarkUp { get; }

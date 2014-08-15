@@ -6,11 +6,6 @@ namespace SQLCC.Core
 {
    public abstract class DbProvider : IDbProvider
    {
-      public string ArgumentNamespace
-      {
-         get { return "dbp"; }
-      }
-
       public abstract void StartTrace(string traceName);
 
       public abstract void StopTrace(string traceName);
