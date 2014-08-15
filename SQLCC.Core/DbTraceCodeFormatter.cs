@@ -21,9 +21,5 @@ namespace SQLCC.Core
 
       public abstract string FormatCodeWithHighlights(string code, List<DbCodeSegment> codeSegments);
 
-      public string ArgumentNamespace
-      {
-         get { return "tcf"; }
-      }
    }
 }

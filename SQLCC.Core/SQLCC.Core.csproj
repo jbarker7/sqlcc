@@ -49,7 +49,6 @@
     <Compile Include="Interfaces\ICommand.cs" />
     <Compile Include="Interfaces\IDbTraceCodeFormatter.cs" />
     <Compile Include="Interfaces\IDbProvider.cs" />
-    <Compile Include="Interfaces\IExtension.cs" />
     <Compile Include="Interfaces\IHighlightCodeProvider.cs" />
     <Compile Include="Interfaces\IOutputProvider.cs" />
     <Compile Include="Objects\DbCodeCoverage.cs" />

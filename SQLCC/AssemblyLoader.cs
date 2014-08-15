@@ -54,14 +54,12 @@ namespace SQLCC
       }
 
       public T CreateTypeFromAssembly<T>(string classNameAndAssemblyName, params object[] args)
-         where T : IExtension
       {
          var type = this.GetTypeFromAssembly(classNameAndAssemblyName);
          return (T) Activator.CreateInstance(type, args);
       }
 
       public T CreateTypeFromAssembly<T>(string classNameAndAssemblyName, Dictionary<string, string> arguments)
-         where T : IExtension
       {
          var type = this.GetTypeFromAssembly(classNameAndAssemblyName);
          var args = GetNamedArgumentArray((T) FormatterServices.GetUninitializedObject(type), arguments);
@@ -69,19 +67,14 @@ namespace SQLCC
       }
 
       public object[] GetNamedArgumentArray<T>(T extension, Dictionary<string, string> arguments)
-         where T : IExtension
       {
-         var args = arguments.Where(p => p.Key.StartsWith(extension.ArgumentNamespace + ".") && p.Key != extension.ArgumentNamespace + ".provider")
-            .ToDictionary(p => p.Key, p => p.Value);
+         var args = arguments.ToDictionary(p => p.Key, p => p.Value);
 
          var constructors = extension.GetType().GetConstructors();
-         var providedSignature = string.Join(",", args.Select(p => p.Key).OrderBy(p => p));
          
          foreach (var constructor in constructors)
          {
-            var parameters = constructor.GetParameters().Select(p => extension.ArgumentNamespace + "." + p.Name).ToArray();
-            var orderedParams = string.Join(",", parameters.OrderBy(p => p));
-            if (providedSignature != orderedParams) continue;
+            var parameters = constructor.GetParameters().Select(p => p.Name).ToArray();
             var returnArgs = new object[parameters.Length];
             for (var i = 0; i < parameters.Length; i++)
             {

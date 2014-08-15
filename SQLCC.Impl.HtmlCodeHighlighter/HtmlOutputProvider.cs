@@ -14,9 +14,9 @@ namespace SQLCC.Impl.HtmlCodeHighlighter
    {
       private readonly string _outputDir;
 
-      public HtmlOutputProvider(string outputDir)
+      public HtmlOutputProvider(string outputDirectory)
       {
-         _outputDir = outputDir;
+          _outputDir = outputDirectory;
       }
 
       public override bool SetUp(string traceName)
