@@ -32,7 +32,7 @@ It works by simply running a trace with a few settings enabled in order to detec
     Data Source=localhost;Initial Catalog=MY_DB;User Id=sa;Password=password;Application Name=SQLCC;
 
 Notice "SQLCC" as the Application Name.
-
+ 
 **Is this done?**
 
 Yes, for the most part, its a really rough proof of concept (aka alpha).  Definitely needs some love and unfortunately I'm not able to fully devote myself to this project.
