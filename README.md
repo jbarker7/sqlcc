@@ -1,7 +1,7 @@
 sqlcc
 =====
 
-Watch this for a quick summary: http://screencast.com/t/5I2N4GQgcb4
+Watch this for a quick summary: http://screencast.com/t/5I2N4GQgcb4 (please note: this video's syntax is out of date.  Please see below for updated syntax).
 
 **The Skinny**
 
@@ -20,10 +20,11 @@ For now, Microsoft SQL Server is supported, but has the capability of being expa
 In its most simple form, modify the App.config with a few values (i.e. connection string, application name, etc.) and then execute the following:
 
     sqlcc --action=execute --target="mstest.exe" --targetArgs="/testcontainer:SQLCC.Sample.Tests.dll" --traceFileName="TraceFile"
-
     sqlcc --action=generate --traceFileName="TraceFile"
 
-Running the above generates a set of HTML files or you can alternatively create your own OutputProvider and store the results in another file format or in the database for querying.
+The first line where action is set to execute, starts a MS SQL trace with the appropriate settings enabled in order to track which lines have been executed.
+
+The second line, generates a set of HTML files with the code coverage from the specified Trace.  You can also create your own OutputProvider and store the results in another file format or in the database for querying.
 
 **How Does it Work?**
 
@@ -38,6 +39,10 @@ Notice "SQLCC" as the Application Name.
 Yes, for the most part, its a really rough proof of concept (aka alpha).  Definitely needs some love and unfortunately I'm not able to fully devote myself to this project.
 
 **Troubleshooting**
+
+- Ensure that "target" is pointing to the full path of your test runner.  If this is MSTest, then include the full path to "mstest.exe", or if it is NUnit, include the full path to "nunit.exe".
+
+- Ensure you have the correct "targetArgs" for your test runner.  If you are using MSTest and your target is set to "C:\Path\To\mstest.exe", then try running your test runner (mstest.exe, nunit.exe, etc.) without sqlcc first with the appropriate arguments.  Once you can run it correctly, copy over the test runner's arguments to "targetArgs".
 
 - Open the App.config and modify the parameters.  The important ones are "databaseConnectionString" which is your connection string to your database which you are running your tests against, "databaseApplicationName" is your Application Name as described above under "How Does it Work?", "traceFileName" is the directory which you would like to store your trace files (currently outputs *.trc files on the server)-- this is on the SQL server (must have read/write access to this directory), "outputDirectory" is the output directory for the HTML files that are generated.
 
