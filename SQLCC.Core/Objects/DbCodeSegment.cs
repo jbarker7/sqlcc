@@ -2,6 +2,8 @@ namespace SQLCC.Core.Objects
 {
    public class DbCodeSegment
    {
+      public string SchemaName { get; set; }
+      
       public string ObjectName { get; set; }
       
       public int LinesOfCode { get; set; }
