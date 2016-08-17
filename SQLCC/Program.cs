@@ -10,6 +10,9 @@ using SQLCC.Commands;
 
 namespace SQLCC
 {
+    /// <summary>
+    /// I am just learning GitHub
+    /// </summary>
    class Program
    {
       static void Main(string[] args)
