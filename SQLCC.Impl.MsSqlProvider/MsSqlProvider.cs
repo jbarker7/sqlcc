@@ -140,14 +140,6 @@ namespace SQLCC.Impl.MsSqlProvider
                               FROM      ::fn_trace_gettable('" + trace + @"', DEFAULT)  AS td
                               JOIN      ( SELECT    SCHEMA_NAME(sys.objects.schema_id) AS [Schema]
                                                    ,sys.objects.name AS [Name]
-                                                   ,CASE sys.objects.type
-                                                      WHEN 'P' THEN 'PROCEDURE'
-                                                      WHEN 'TF' THEN 'FUNCTION/TABLE-VALUED'
-                                                      WHEN 'TR' THEN 'TRIGGER'
-                                                      WHEN 'FN' THEN 'FUNCTION/SCALAR'
-                                                      WHEN 'IF'
-                                                      THEN 'FUNCTION/INLINE TABLE-VALUED'
-                                                    END AS [Type]
                                                    ,OBJECT_DEFINITION(sys.objects.object_id) AS [Code]
                                           FROM      sys.objects
                                           WHERE     sys.objects.type IN ( 'fn', 'if', 'tf' )
