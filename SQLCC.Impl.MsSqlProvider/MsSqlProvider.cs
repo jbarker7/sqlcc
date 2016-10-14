@@ -120,7 +120,7 @@ exec sp_trace_setstatus @@TraceID, 2 -- delete");
 FROM (
 	SELECT DISTINCT LineNumber, Offset as StartByte, IntegerData2 as EndByte, ObjectName, ObjectID
 FROM ::fn_trace_gettable('" + trace + @"', default) 
-	WHERE EventClass IN (40,41,42,43,44) AND Offset IS NOT NULL AND ObjectName IS NOT NULL AND Offset <= IntegerData2
+	WHERE EventClass IN (40,41,42,43,44) AND Offset IS NOT NULL AND ObjectName IS NOT NULL
 	) cs
 ORDER BY SchemaName, ObjectName, LineNumber ASC, StartByte ASC, EndByte ASC;");
          return codeTrace;
