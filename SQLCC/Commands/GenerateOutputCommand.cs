@@ -28,11 +28,16 @@ namespace SQLCC.Commands
 
       public void Execute()
       {
+         var objects = _dbProvider.GetAllObjects();
+         foreach (var o in objects)
+         {
+             o.Name = $"{o.Schema}.{o.Name}";
+         }
          var codeCoverageProcessor = new CodeCoverageProcessor(_dbCodeFormatter, _codeHighlighter);
          var codeCover = new DbCodeCoverage();
 
          codeCover.Name = _traceName;
-         codeCover.TotalObjects = _dbProvider.GetAllObjects();
+         codeCover.TotalObjects = objects;
          codeCover.TraceCodeSegments = _dbProvider.GetTraceCodeSegments(_traceName);
 
          codeCoverageProcessor.ProcessAllCoverage(codeCover);
