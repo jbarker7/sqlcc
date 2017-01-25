@@ -89,7 +89,7 @@ namespace SQLCC
       {
          foreach (var obj in codeCover.TotalObjects)
          {
-            obj.CoveredSegments = codeCover.TraceCodeSegments.Where(p => p.ObjectName.Equals(obj.Name)).ToList();
+            obj.CoveredSegments = codeCover.TraceCodeSegments.Where(p => p.ObjectName.Equals(obj.Name.Split('.')[1]) && p.SchemaName.Equals(obj.Schema)).ToList();
             obj.Set(ProcessObjectCoverage(obj));
             obj.CodeHighlighted = _highlightCodeProvider.HighlightCode(obj.Code, obj.CoveredSegments);
 

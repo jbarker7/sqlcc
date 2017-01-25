@@ -31,36 +31,56 @@ namespace SQLCC
 
          var command = arguments["action"].ToLower().Trim();
 
-          var traceName = arguments.ContainsKey("traceFileName") ? arguments["traceFileName"] : null;
+         var traceName = arguments.ContainsKey("traceFileName") ? arguments["traceFileName"] : null;
          switch (command)
          {
-            case "generate":
-
+             case "generate":
+             {
                  RequiredAttributes(arguments,
-                 "traceFileName"
-                );
-               
-               var generateCommand = new GenerateOutputCommand(dbProvider, dbCodeFormatter, codeHighlighter, outputProvider, traceName);
-               generateCommand.Execute();
-               break;
+                  "traceFileName"
+                 );
 
-            case "execute":
-                
-                RequiredAttributes(arguments,
-                 "target"
-                );
-                 
-               traceName = traceName ?? DateTime.Now.ToString("yyyyMMddHHmmss");
-               var startCommand = new StartCommand(outputProvider, dbProvider, traceName);
-               startCommand.Execute();
+                 var generateCommand = new GenerateOutputCommand(dbProvider, dbCodeFormatter, codeHighlighter, outputProvider, traceName);
+                 generateCommand.Execute();
+                 break;
+             }
 
-                 var executeCommand = new ExecuteCommand(arguments["target"], arguments.ContainsKey("targetArgs") ? arguments["targetArgs"] : string.Empty);
-                 executeCommand.Execute();
-                                
+             case "start":
+             {
+                 traceName = traceName ?? DateTime.Now.ToString("yyyyMMddHHmmss");
+                 var startCommand = new StartCommand(outputProvider, dbProvider, traceName);
+                 startCommand.Execute();
+
+                 break;
+             }
+
+             case "stop":
+             {
+                 traceName = traceName ?? DateTime.Now.ToString("yyyyMMddHHmmss");
                  var stopCommand = new StopCommand(dbProvider, outputProvider, traceName);
                  stopCommand.Execute();
 
-               break;
+                 break;
+             }
+
+             case "execute":
+             {
+                 RequiredAttributes(arguments,
+                  "target"
+                 );
+
+                 traceName = traceName ?? DateTime.Now.ToString("yyyyMMddHHmmss");
+                 var startCommand = new StartCommand(outputProvider, dbProvider, traceName);
+                 startCommand.Execute();
+
+                 var executeCommand = new ExecuteCommand(arguments["target"], arguments.ContainsKey("targetArgs") ? arguments["targetArgs"] : string.Empty);
+                 executeCommand.Execute();
+
+                 var stopCommand = new StopCommand(dbProvider, outputProvider, traceName);
+                 stopCommand.Execute();
+
+                 break;
+             }
          }
 
       }

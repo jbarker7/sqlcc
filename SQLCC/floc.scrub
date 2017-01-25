@@ -1,4 +1,4 @@
 ﻿([\n\r][\s]+)	\n	Erase white space at beginning of file.
 ([\t]+|[ ]+)	 	Erase extra spaces
-/\*(?>(?:(?!\*/|/\*).)*)(?>(?:/\*(?>(?:(?!\*/|/\*).)*)\*/(?>(?:(?!\*/|/\*).)*))*).*?\*/|--.*?\r?[\n]		Erase comments
+/\*(?>(?:(?!\*/|/\*).)*)(?>(?:/\*(?>(?:(?!\*/|/\*).)*)\*/(?>(?:(?!\*/|/\*).)*))*).*?\*/|--(?!<SQLCC>).*?\r?[\n]		Erase comments
 [\r\n]+	\n	Replace extra new lines

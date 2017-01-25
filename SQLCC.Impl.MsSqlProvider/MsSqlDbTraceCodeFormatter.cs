@@ -25,8 +25,15 @@ namespace SQLCC.Impl.MsSqlProvider
          {
             codeContents.Insert((lineOfCode.StartByte / 2) + offset, this.StartHighlightMarkUp);
             offset += this.StartHighlightMarkUp.Length;
-            codeContents.Insert((lineOfCode.EndByte / 2) + offset, this.EndHighlightMarkUp);
-            offset += this.EndHighlightMarkUp.Length;
+            if (lineOfCode.EndByte == -1)
+            {
+                codeContents.Append(this.EndHighlightMarkUp);
+            }
+            else
+            {
+                codeContents.Insert((lineOfCode.EndByte / 2) + offset, this.EndHighlightMarkUp);
+                offset += this.EndHighlightMarkUp.Length;
+            }
          }
          return _dataScrubber.Scrub(codeContents.ToString(), "format.scrub");
       }

@@ -57,7 +57,7 @@ namespace SQLCC.Impl.HtmlCodeHighlighter
          
          foreach (var obj in objects)
          {
-            File.WriteAllText(Path.Combine(codeCoverageLocation, obj.Name + ".html"), template.Replace("[CODE]", obj.CodeHighlighted));
+            File.WriteAllText(Path.Combine(codeCoverageLocation, $"{obj.Name}.html"), template.Replace("[CODE]", obj.CodeHighlighted));
          }
       }
 

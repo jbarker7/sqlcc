@@ -116,10 +116,13 @@ exec sp_trace_setstatus @@TraceID, 2 -- delete");
       public override List<DbCodeSegment> GetTraceCodeSegments(string traceName)
       {
          var trace = Path.Combine(_traceDir, string.Format(TraceFileFormat, traceName));
-         var codeTrace = _db.Fetch<DbCodeSegment>(@"SELECT DISTINCT LineNumber, Offset as StartByte, IntegerData2 as EndByte, ObjectName
+         var codeTrace = _db.Fetch<DbCodeSegment>(@"SELECT	LineNumber, StartByte, EndByte, ObjectName, OBJECT_SCHEMA_NAME(ObjectID) SchemaName
+FROM (
+	SELECT DISTINCT LineNumber, Offset as StartByte, IntegerData2 as EndByte, ObjectName, ObjectID
 FROM ::fn_trace_gettable('" + trace + @"', default) 
-WHERE EventClass IN (40,41,42,43,44) AND Offset IS NOT NULL AND ObjectName IS NOT NULL
-ORDER BY ObjectName, LineNumber ASC, StartByte ASC, IntegerData2 ASC;");
+	WHERE EventClass IN (40,41,42,43,44) AND Offset IS NOT NULL AND ObjectName IS NOT NULL
+	) cs
+ORDER BY SchemaName, ObjectName, LineNumber ASC, StartByte ASC, EndByte ASC;");
          return codeTrace;
       }
 

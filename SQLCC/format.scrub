@@ -4,8 +4,8 @@
 ([\s]*END(;)*[\s]*\z)	{0}$1{1}	Last end statement.
 ([\s]*BEGIN[\s]*)({0})	$2$1	If there is a BEGIN statement near the start of coverage, include BEGIN.
 ({1})([\s]*END[\s]*)	$2$1	If there is an END statement near the end of coverage, include END.
-{1}([\s]*(--.*)*[\s]*(begin|end)*[\s]*(--.*)*[\s]*){0}	$1	Include begin/end if it is surrounded by comments or just white-space.  Also include comments.
-(end)([\s]*(--.*)*[\s]*){0}	$1{0}$2	Cover up until end statement.
+{1}([\s]*(--.*)[\s]*(begin|end)*[\s]*(--.*)[\s]*){0}	$1	Include begin/end if it is surrounded by comments or just white-space.  Also include comments.
+(\bend\b)([\s]|(--.*$)|(/\*.*\*/))*{0}	$1{0}$2	Cover up until end statement.
 (([\s]*ELSE[\s]*)[\s]*(--.*)*[\s]*){0}	{0}$1	If there is an ELSE statemenet that was hit, cover this as well.
 {1}([\s]*(declare[\s]+.+)+[\n\r]+([\s]*declare[\s]+.+)*[\s]*)	$1{1}	DECLARE statements are not covered since profiler does not capture them if there is no default value.
 ([\s]*(declare[\s]+.+)+[\n\r]+([\s]*declare[\s]+.+)*[\s]*){0}	{0}$1	DECLARE statements are not covered since profiler does not capture them if there is no default value.

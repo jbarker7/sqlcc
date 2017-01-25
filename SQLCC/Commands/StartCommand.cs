@@ -27,7 +27,6 @@ namespace SQLCC.Commands
             throw new ApplicationException("You cannot start more than one trace at a time!");
          }
 
-         _outputProvider.SetUp(_traceName);
          _dbProvider.StartTrace(_traceName);
       }
    }
